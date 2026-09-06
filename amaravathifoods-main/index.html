@@ -1,0 +1,160 @@
+ <!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Amaravathi Foods</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-orb bg-orb-a"></div>
+  <div class="bg-orb bg-orb-b"></div>
+
+  <main class="app-shell">
+    <section class="hero card">
+      <div>
+        <p class="eyebrow">Workbook-style food billing</p>
+        <h1>Amaravathi Foods</h1>
+        <p class="subtitle">Select a hotel, enter items, and the sheet calculates rates, amounts, and running balance automatically.</p>
+      </div>
+      <div class="hero-stats">
+        <div><span>Hotels</span><strong id="hotelCount">0</strong></div>
+        <div><span>Items</span><strong id="itemCount">0</strong></div>
+        <div><span>Saved Bills</span><strong id="orderCount">0</strong></div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <div class="main-col">
+        <section class="card section">
+          <div class="section-head">
+            <div>
+              <h2>Hotel Sheet</h2>
+              <p>Search or choose one hotel to open its bill sheet.</p>
+            </div>
+            <a class="btn btn-ghost page-link" href="records.html">Open records</a>
+          </div>
+          <div class="hotel-picker">
+            <label>
+              <span>Select hotel</span>
+              <input id="hotelSearch" class="input" list="hotelNames" placeholder="Click here to select a hotel" autocomplete="off" aria-label="Search and select hotel" />
+            </label>
+            <datalist id="hotelNames"></datalist>
+            <div class="selected-hotel">
+              <span>Selected hotel</span>
+              <strong id="selectedHotelLabel">trupti</strong>
+            </div>
+          </div>
+          <div id="hotelSearchFeedback" class="search-feedback" role="status">Click the box to view all hotels, or type to search.</div>
+          <div id="hotelOptions" class="hotel-options" aria-label="Hotel list"></div>
+        </section>
+
+        <section class="card section">
+          <div class="section-head">
+            <div>
+              <h2>Bill Details</h2>
+              <p>Totals update like an Excel sheet.</p>
+            </div>
+            <div class="toolbar">
+              <button id="addRowBtn" class="btn">+ Add row</button>
+              <button id="sampleBtn" class="btn btn-ghost">Load sample</button>
+              <button id="saveBtn" class="btn btn-primary">Save bill</button>
+              <button id="cancelEditBtn" class="btn btn-ghost" type="button" hidden>Cancel edit</button>
+            </div>
+          </div>
+
+          <div class="meta-grid">
+            <label><span>Hotel name</span><input id="hotelName" class="input" placeholder="Select a hotel" readonly /></label>
+            <label><span>Bill date</span><input id="billDate" type="date" class="input" /></label>
+            <label class="old-balance-field"><span>Old Balance</span><input id="oldBalance" class="input" type="number" min="0" step="0.01" readonly /></label>
+            <div class="old-balance-actions"><button id="editOldBalanceBtn" class="btn btn-ghost" type="button">Edit balance</button><button id="saveOldBalanceBtn" class="btn btn-primary" type="button" hidden>Save balance</button><button id="cancelOldBalanceBtn" class="btn btn-ghost" type="button" hidden>Cancel</button></div>
+          </div>
+
+          <p class="sheet-note">On phone, swipe the row left or right to see all columns in one line.</p>
+          <div class="table-wrap">
+            <table class="sheet">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Item</th>
+                  <th>Qty</th>
+                  <th>Rate</th>
+                  <th>Amount</th>
+                  <th>Paid</th>
+                  <th>Balance</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="lineItems"></tbody>
+            </table>
+          </div>
+
+          <div class="summary-grid">
+            <div><span>Subtotal</span><strong id="subtotal">&#8377;0</strong></div>
+            <div><span>Paid</span><strong id="paidTotal">&#8377;0</strong></div>
+            <div><span>Balance</span><strong id="balanceTotal">&#8377;0</strong></div>
+          </div>
+
+          <div class="toolbar footer-actions">
+            <button id="clearBtn" class="btn btn-ghost">Clear draft</button>
+            <button id="exportBtn" class="btn">Export CSV</button>
+            <a class="btn btn-ghost" href="records.html">Records</a>
+            <button id="resetBtn" class="btn btn-danger">Reset rows</button>
+          </div>
+          <div id="syncStatus" class="sync-status" role="status">Drive: setup needed</div>
+        </section>
+      </div>
+
+      <aside class="side-col">
+        <section class="card section">
+          <div class="section-head compact">
+            <div>
+              <h2>Selected Hotel History</h2>
+              <p>Saved bills, item rows, and old balance for the selected hotel.</p>
+            </div>
+          </div>
+          <div id="hotelHistorySummary" class="history-summary"></div>
+          <div id="hotelHistoryList" class="history-list"></div>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <template id="rowTemplate">
+    <tr>
+      <td class="row-no"></td>
+      <td>
+        <select class="input item"></select>
+      </td>
+      <td><input class="input qty" type="number" min="0" step="1" value="1" /></td>
+      <td><input class="input rate" type="number" min="0" step="1" readonly /></td>
+      <td><input class="input amount" type="number" readonly /></td>
+      <td><input class="input paid" type="number" min="0" step="1" value="0" /></td>
+      <td><input class="input balance" type="number" readonly /></td>
+      <td><button class="icon-btn remove-row" type="button" aria-label="Remove row">&times;</button></td>
+    </tr>
+  </template>
+
+  <template id="orderTemplate">
+    <article class="order-card">
+      <div class="order-head">
+        <div>
+          <strong class="order-hotel"></strong>
+          <p class="order-meta"></p>
+        </div>
+        <div class="order-total"></div>
+      </div>
+      <div class="order-tags"></div>
+      <div class="order-actions">
+        <button class="btn btn-small restore-order">Restore</button>
+        <button class="btn btn-small btn-ghost delete-order">Delete</button>
+      </div>
+    </article>
+  </template>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
