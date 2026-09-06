@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Amaravathi Foods Records</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app-shell records-shell">
+    <section class="hero card">
+      <div>
+        <p class="eyebrow">Saved bill register</p>
+        <h1>Records</h1>
+        <p class="subtitle">Every saved bill is shown in an Excel-style table with item rows, totals, and balance.</p>
+      </div>
+      <div class="toolbar records-top-actions">
+        <a class="btn btn-ghost" href="index.html">Back to billing</a>
+        <button id="exportAllBtn" class="btn btn-primary" type="button">Export all CSV</button>
+      </div>
+    </section>
+
+    <section class="card section">
+      <div class="section-head">
+        <div>
+          <h2>All Saved Bills</h2>
+          <p>Swipe sideways on phone to view every column clearly.</p>
+        </div>
+      </div>
+
+      <div class="summary-grid records-summary">
+        <div><span>Bills</span><strong id="recordBillCount">0</strong></div>
+        <div><span>Subtotal</span><strong id="recordSubtotal">&#8377;0</strong></div>
+        <div><span>Paid</span><strong id="recordPaid">&#8377;0</strong></div>
+        <div><span>Balance</span><strong id="recordBalance">&#8377;0</strong></div>
+      </div>
+
+      <div class="table-wrap records-table-wrap">
+        <table class="details-table records-table">
+          <thead>
+            <tr>
+              <th>Bill Date</th>
+              <th>Hotel</th>
+              <th>#</th>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Rate</th>
+              <th>Amount</th>
+              <th>Paid</th>
+              <th>Balance</th>
+              <th>Saved At</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="recordsBody"></tbody>
+        </table>
+      </div>
+
+      <div id="recordsEmpty" class="empty-state">No saved bills yet.</div>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="records.js"></script>
+</body>
+</html>
